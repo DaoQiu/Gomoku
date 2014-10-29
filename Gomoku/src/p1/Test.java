@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 public class Test {
 
 	public static void main(String[] args) {
-		FiveChessFrame ff = new FiveChessFrame();
+		FiveChessFrame ff = new FiveChessFrame();// init the main frame
 	}
 
 }

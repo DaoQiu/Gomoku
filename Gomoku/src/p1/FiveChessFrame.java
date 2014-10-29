@@ -15,13 +15,13 @@ import java.util.*;
 
 
 public class FiveChessFrame extends JFrame implements MouseListener{
-	//取得屏幕的宽度
+	//get the width of screen		
 	int width = Toolkit.getDefaultToolkit().getScreenSize().width; 
-	//取得屏幕的高度
+	//height
 	int height = Toolkit.getDefaultToolkit().getScreenSize().height;
-	//背景图片
+	
 	BufferedImage bgImage = null;
-	//保存棋子的坐标
+	//the position of stones
 	int begin=1;
 	int rr=0;
 	int x=0;
@@ -37,17 +37,17 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 	int hnum=0;
 	int [] hx=new int [361],hy=new int [361];
 	int ub1,db1,ub2,db2;
-	//保存之前下过的全部棋子的坐标
-	//其中数据内容0 ：	表示这个点并没有棋子，	1：	表示这个点是黑子	2:	表示这个点是白字
+	//save the stones' position
+	//0 = not taken, 1 = black, 2 = white
 	int [][] allChess = new int [19][19],analyse=new int [19][19],landform=new int [19][19],winw=new int[19][19],winb=new int[19][19];
-	//标识当前应该是黑棋还是白棋下下一步
+	//which should do next
 	boolean isBlack = true;
-	//表示当前游戏是否可以继续
+	
 	boolean canPlay = true;
-	//保存显示的提示信息
-	public FiveChessFrame()//创建界面
+	
+	public FiveChessFrame()//the main frame
 	{
-		this.setTitle("这不是五子棋");
+		this.setTitle("this is not Gomoku");
 		this.setSize(500, 500);
 		this.setLocation((width - 500)/2, (height - 500)/2);
 		this.setResizable(false);
@@ -55,7 +55,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 		this.setVisible(true);
 		this.addMouseListener(this);
 		int k,l;
-		for(int q=0;q<=18;q++){//给棋盘每个点分权值
+		for(int q=0;q<=18;q++){//make each position to gain value
 			for(int p=0;p<=18;p++){
 				if(q-9<0)
 					k=9-q;
@@ -69,9 +69,9 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 				canPlay=false;
 			}
 		}
-		//刷新屏幕，防止第一次游戏时出现黑屏显示
 		
-		//绘制背景
+		
+		//init background
 		try {
 			bgImage = ImageIO.read(new File("image/background.jpg"));
 		} catch (IOException e) {
@@ -80,24 +80,24 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 		this.repaint();
 	}
 	
-	public void paint(Graphics g)//重写“paint”类
+	public void paint(Graphics g)//
 	{
-		//双缓冲技术防止屏幕闪烁
-		BufferedImage bi = new BufferedImage(500, 525, BufferedImage.TYPE_INT_ARGB);//表示一个图像，它具有合成整数像素的 8 位 RGBA 颜色分量
+		//Double buffering technique to prevent screen flicker
+		BufferedImage bi = new BufferedImage(500, 525, BufferedImage.TYPE_INT_ARGB);//8 bit RGBA
 		Graphics g2 = bi.createGraphics(); 
 		g2.drawImage(bgImage, 3, 25, this );
 		g2.setColor(Color.BLACK);
-		//输出标题信息
-		g2.setFont(new Font("黑体", Font.BOLD, 25));
-		g2.setFont(new Font("宋体", 0 , 14));
-		//绘制棋盘
+		
+		g2.setFont(new Font("Times New Roman", Font.BOLD, 25));
+		g2.setFont(new Font("Times New Roman", 0 , 14));
+		
 		for(int i=0; i<=18; i++)
 		{
-			g2.drawLine(13, 75+20*i, 372, 75+20*i);//加横线
+			g2.drawLine(13, 75+20*i, 372, 75+20*i);
 			g2.drawLine(13+20*i, 76, 13+20*i, 434);
 		}
 		
-		g2.fillOval(71, 133, 4, 4);//标注点位
+		g2.fillOval(71, 133, 4, 4);
 		g2.fillOval(311, 133, 4, 4);
 		g2.fillOval(311, 373, 4, 4);
 		g2.fillOval(71, 373, 4, 4);
@@ -108,19 +108,19 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 		g2.fillOval(191, 253, 4, 4);
 
 		
-		for(int i=0;i<19;i++)//绘制棋子
+		for(int i=0;i<19;i++)
 			for(int j=0;j<19;j++)
 			{
 				if(allChess[i][j]==1)
 				{
-					//黑子
+					//black stone
 					int tempX = i * 20 + 13;
 					int tempY = j * 20 + 76;
 					g2.fillOval(tempX-7, tempY-7, 14, 14);
 				}
 				if(allChess[i][j]==2)
 				{
-					//白子
+					//white stone
 					int tempX = i * 20 + 13;
 					int tempY = j * 20 + 76;
 					g2.setColor(Color.WHITE);
@@ -146,7 +146,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
-	public void boundary(int [] a,int flag){//寻找边界，分别为连续边界、非对手边界
+	public void boundary(int [] a,int flag){//looking for boundary
 		int m=4;
 		while(true){
 			if(a[m+1]==flag)
@@ -200,7 +200,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 			}
 		}
 	}
-	public int shape(int[] a,int flag){//根据棋型给其等级
+	public int shape(int[] a,int flag){//evaluate the level of current situation
 		if(ub2-db2<4)
 			return 0;
 		if(ub1-db1==4){
@@ -487,7 +487,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 		else
 			return 0;
 	}
-	public void find(){//遍历所有可以下的点，并分别分析，选择合理的落子
+	public void find(){//Can iterate through all the points and analysis respectively, choose reasonable move later
 		int i=0,j=0,breakk=0;
 		while(true){
 			while(analyse[i][j]!=0){
@@ -520,7 +520,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 				break;
 		}
 	}
-	public void WZQ(){//思考的主函数
+	public void Gomoku(){//思考的主函数
 		Random ran=new Random();
 		int i=0,j=0,breakk=0,max=-1000,mx=0,my=0;
 		int []nx=new int[20],ny=new int[20];
@@ -561,7 +561,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 			}
 		key=1;num=0;
 	}
-	public int[][] estimate(int i,int j,int flag){//得到四个方向的棋型，然后分析并得到最合理的落子
+	public int[][] estimate(int i,int j,int flag){//choose the most reasonable move
 		double sum=0,sa,sb,sc,sd;
 		int vx=0,vy=0;
 		int [][] a=new int [4][9];
@@ -635,16 +635,16 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 			tenth_s(i,j,a,1);
 		return a;
 	}
-	public void mousePressed(MouseEvent e) {//监听棋盘的鼠标是件
+	public void mousePressed(MouseEvent e) {//listen click
 		x=e.getX();
 		y=e.getY();
-		if(x>16&&x<89&&y>447&&y<488){//监听”开始“按钮
+		if(x>16&&x<89&&y>447&&y<488){//
 			if(canPlay==false){
 			   canPlay=true;
 			   for(int i=0;i<=18;i++)
 					 for(int j=0;j<=18;j++)
 						 allChess[i][j]=0;
-			   int result=JOptionPane.showConfirmDialog(this, "是否先行");
+			   int result=JOptionPane.showConfirmDialog(this, "start first");
 			   if(result==1){
 				 allChess[9][9]=2;
 				 hx[hnum]=9;
@@ -658,12 +658,12 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 				   isBlack=true;
 			}
 			else{
-				int result = JOptionPane.showConfirmDialog(this, "是否重新开始");
+				int result = JOptionPane.showConfirmDialog(this, "restart");
 				if(result==0){
 					for(int i=0;i<=18;i++)
 						 for(int j=0;j<=18;j++)
 							 allChess[i][j]=0;
-					int result1 = JOptionPane.showConfirmDialog(this, "是否先行");
+					int result1 = JOptionPane.showConfirmDialog(this, "start first");
 					   if(result1==1){
 						 allChess[9][9]=2;
 						 hx[hnum]=9;
@@ -677,7 +677,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 			}
 		}
 		this.repaint();
-		if(x>105&&x<178&&y>447&&y<488){//监听“悔棋”按钮
+		if(x>105&&x<178&&y>447&&y<488){//undo last move
 			if(allChess[hx[0]][hy[0]]==2){
 				if(hnum>1){
 					allChess[hx[hnum-1]][hy[hnum-1]]=0;
@@ -686,7 +686,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 					canPlay=true;
 				}
 				else
-					JOptionPane.showMessageDialog(this,"你还未落子");
+					JOptionPane.showMessageDialog(this,"you do not move");
 			}
 			else{
 				if(hnum>0){
@@ -696,11 +696,11 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 					canPlay=true;
 				}
 				else
-					JOptionPane.showMessageDialog(this,"你还未落子");
+					JOptionPane.showMessageDialog(this,"you do not move");
 			}
 		}
 		this.repaint();
-		if(x>=13&&x<=372&&y>=76&&y<=434&&canPlay==true){//监听“棋盘”落子
+		if(x>=13&&x<=372&&y>=76&&y<=434&&canPlay==true){//move or action
 			x=Math.round((float)(x-13)/20);
 			y=Math.round((float)(y-76)/20);
 			if(allChess[x][y]==0){
@@ -712,33 +712,33 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 			  }
 			  boolean winFlagB = this.checkWin(x,y);
 			  if(winFlagB){
-				  JOptionPane.showMessageDialog(this, "游戏结束,黑方获胜");
+				  JOptionPane.showMessageDialog(this, "Game over, black win");
 				  canPlay = false;
 			  }
 			  for(int i=0;i<=18;i++)
 				   for(int j=0;j<=18;j++)
-					  analyse[i][j]=allChess[i][j];//将当前棋盘拷贝到analyse[i][j]
-			  WZQ();
+					  analyse[i][j]=allChess[i][j];//analyse[i][j]
+			  Gomoku();
 			  hx[hnum]=wx;
 			  hy[hnum]=wy;
 			  hnum++;
 			  winFlagB=this.checkWin(wx,wy);
 			  if(winFlagB){
-				  JOptionPane.showMessageDialog(this, "游戏结束,白方获胜");
+				  JOptionPane.showMessageDialog(this, "Game over, white win");
 				  canPlay = false;
 			  }
 			}
 		}
 		this.repaint();
-		if(x>191&&x<263&&y>447&&y<488){//监听“认输”按钮
+		if(x>191&&x<263&&y>447&&y<488){//surrender
 			for(int i=0;i<=18;i++)
 				 for(int j=0;j<=18;j++)
 					 allChess[i][j]=0;
 			canPlay=false;
 		}
 		this.repaint();
-		if(x>277&&x<352&&y>447&&y<488){//监听“退出”游戏
-			int reslut=JOptionPane.showConfirmDialog(this, "是否退出游戏？");
+		if(x>277&&x<352&&y>447&&y<488){//exit
+			int reslut=JOptionPane.showConfirmDialog(this, "exit？");
 			if(reslut==0)
 			  System.exit(0);
 		}
@@ -750,34 +750,34 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 		
 	}
 
-	public boolean checkWin(int a,int b){//判断胜利
+	public boolean checkWin(int a,int b){//win or not
 	
-//		保存共有多少相同颜色棋子相连
+//		
 		int count = 1;
 		boolean flag = false;
 		
-		//判断横向是否有五个棋子相连，特点纵坐标相同，即allChess[x][y]中y值是相同的
+		// y from allChess[x][y] is the same?
 		int color = allChess[a][b];
 
-		//判断横向
+		
 		count = checkCount(1, 0, color,a,b);
 		if(count >= 5)
 			flag = true;
 		else
 		{
-			//判断纵向
+			
 			count = checkCount(0, 1, color,a,b);
 			if(count >= 5)
 				flag = true;
 			else
 			{
-				//判断右上、左下
+				
 				count = checkCount(1, -1, color,a,b);
 				if(count >= 5)
 					flag = true;
 				else
 				{
-					//判断右下、左上
+					
 					count = checkCount(1, 1, color,a,b);
 					if(count >= 5)
 						flag = true;
@@ -788,7 +788,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 	}
 	
 	
-	private int checkCount(int xChange, int yChange, int color,int x,int y){//判断棋子连接的数量
+	private int checkCount(int xChange, int yChange, int color,int x,int y){//how much stones are in a lane
 	
 		int count = 1;
 		int xTemp = xChange;
