@@ -520,7 +520,7 @@ public class FiveChessFrame extends JFrame implements MouseListener{
 				break;
 		}
 	}
-	public void Gomoku(){//思考的主函数
+	public void Gomoku(){//main function of analyzing
 		Random ran=new Random();
 		int i=0,j=0,breakk=0,max=-1000,mx=0,my=0;
 		int []nx=new int[20],ny=new int[20];
